@@ -13,7 +13,7 @@ public class ParsingWekaResult {
 	private final static Pattern numberPattern = Pattern.compile(numberPatternStr);
 
 	
-	
+	//args[0] :  
 	public static void main(String[] args) throws Exception {
 		ArrayList<String> project_algorithm = new ArrayList<String>();
 		ArrayList<String> precision = new ArrayList<String>();
@@ -53,9 +53,51 @@ public class ParsingWekaResult {
 			}
 		}
 		
+		System.out.println("bayesNet");
+		System.out.println("precision | recall | f_measure");
 		for(int i = 0; i < project_algorithm.size(); i++) {
 			if(project_algorithm.get(i).contains("bayesNet")) {
-				System.out.println(project_algorithm.get(i)+","+precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+			}
+		}
+		System.out.println();
+		System.out.println("NaiveBayes");
+		System.out.println("precision | recall | f_measure");
+		for(int i = 0; i < project_algorithm.size(); i++) {
+			if(project_algorithm.get(i).contains("naive")) {
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+			}
+		}
+		System.out.println();
+		System.out.println("random");
+		System.out.println("precision | recall | f_measure");
+		for(int i = 0; i < project_algorithm.size(); i++) {
+			if(project_algorithm.get(i).contains("random")) {
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+			}
+		}
+		System.out.println();
+		System.out.println("LMT");
+		System.out.println("precision | recall | f_measure");
+		for(int i = 0; i < project_algorithm.size(); i++) {
+			if(project_algorithm.get(i).contains("lmt")) {
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+			}
+		}
+		System.out.println();
+		System.out.println("J48");
+		System.out.println("precision | recall | f_measure");
+		for(int i = 0; i < project_algorithm.size(); i++) {
+			if(project_algorithm.get(i).contains("j48")) {
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
+			}
+		}
+		System.out.println();
+		System.out.println("IBK");
+		System.out.println("precision | recall | f_measure");
+		for(int i = 0; i < project_algorithm.size(); i++) {
+			if(project_algorithm.get(i).contains("ibk")) {
+				System.out.println(precision.get(i)+","+recall.get(i)+","+f_measure.get(i));
 			}
 		}
 	}
