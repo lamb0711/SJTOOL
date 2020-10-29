@@ -73,4 +73,7 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
 	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+	
+	// https://mvnrepository.com/artifact/com.github.fracpete/multisearch-weka-package
+	compile group: 'com.github.fracpete', name: 'multisearch-weka-package', version: '2020.2.17'
 }
