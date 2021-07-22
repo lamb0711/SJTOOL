@@ -35,8 +35,11 @@ public class NumberOfCommit {
 		Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader().parse(in);
 		// save CSV
 		String resultCSVPath = args[2];
-		BufferedWriter writer = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectList.csv")));
-		CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
+		BufferedWriter writerOver100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTrain.csv")));
+		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
+		
+		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
+		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
 
 		for (CSVRecord record : records) {
 			String githubAddress = record.get("Github");
@@ -97,13 +100,17 @@ public class NumberOfCommit {
 			}
 			
 			if(over100 >= 10) {
-				csvPrinter.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+			}else {
+				csvPrinterLess100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
 			}
+			
 			
 			System.out.println("pojectName : "+pojectName+"	over100 : "+over100);
 		}
 		
-		csvPrinter.close();
+		csvPrinterOver100.close();
+		csvPrinterLess100.close();
 		
 	}
 	private static String parseAuthorID(String authorId) {
