@@ -2,7 +2,8 @@ package edu.handong.csee.isel.data;
 
 import org.apache.commons.csv.CSVRecord;
 
-public class CSVinfo {
+public class CSVinfo{
+	
 	String isBuggy;
 	String Modify_Lines;
 	String Add_Lines;
@@ -46,9 +47,9 @@ public class CSVinfo {
 		this.NUC = record.get("NUC");
 		this.developerExperience = record.get("developerExperience");
 		this.REXP = record.get("REXP");
-//		this.SEXP = record.get("SEXP");
+		this.SEXP = record.get("SEXP");
 		this.LT = record.get("LT");
-		this.commitTime = record.get("commitTime");
+		this.commitTime = record.get("meta_data-commitTime");
 		this.Key = record.get("Key");
 	}
 
@@ -127,10 +128,6 @@ public class CSVinfo {
 	public String getREXP() {
 		return REXP;
 	}
-//	
-//	public String getSEXP() {
-//		return SEXP;
-//	}
 
 	public String getLT() {
 		return LT;
@@ -139,8 +136,10 @@ public class CSVinfo {
 	public String getKey() {
 		return Key;
 	}
-	
+
 	public String getCommitTime() {
 		return commitTime;
 	}
+
+	
 }

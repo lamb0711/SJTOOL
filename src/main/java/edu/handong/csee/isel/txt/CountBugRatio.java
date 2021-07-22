@@ -25,6 +25,8 @@ public class CountBugRatio {
 	private final static Pattern timePattern = Pattern.compile(timePatternStr);
 	
 	public static void main(String[] args) throws Exception {
+		args[0] = "/Users/yangsujin/Desktop/sqoop-reference/sqoop_Label.csv";
+		
 		TreeMap<String, ArrayList<CSVinfo>> metrics = new TreeMap<>();///
 		HashMap<String, Integer> bugRatio = new HashMap<>();
 		HashMap<String, Integer> allNum = new HashMap<>();
@@ -83,7 +85,7 @@ public class CountBugRatio {
 
 	private static void Save2CSV(HashMap<String, Integer> bugRatioInfos) throws Exception {
 		
-		String resultCSVPath = "/Users/yangsujin/Desktop/tez-Real.csv";
+		String resultCSVPath = "/Users/yangsujin/Desktop/ranger-Real.csv";
 		BufferedWriter writer = new BufferedWriter(new FileWriter( new File(resultCSVPath)));
 		CSVPrinter csvPrinter = new CSVPrinter(writer, 
 				CSVFormat.DEFAULT.withHeader("Date","Bug Ratio %"));

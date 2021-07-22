@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
@@ -42,6 +44,7 @@ public class NumberOfCommit {
 			String output = args[0];
 			String issueKey = record.get("ISSUE KEY");
 			String Dev = record.get("Dev Days");
+			HashMap<String, ArrayList<Integer>> developer_commit = new HashMap<>();
 			
 			Pattern p = Pattern.compile(".*/(.+)");
 			Matcher m = p.matcher(githubAddress);
@@ -58,6 +61,7 @@ public class NumberOfCommit {
 			} else {
 				gitDirectory = GitClone(pojectName,output,gitRemoteURI);
 			}
+			
 			if(!isValidRepository(pojectName,output)) continue;
 			String gitRepositoryPath = gitDirectory.getAbsolutePath();
 			
@@ -67,14 +71,50 @@ public class NumberOfCommit {
 			
 			int numOfCommit = (int) StreamSupport.stream(initialCommits.spliterator(), false).count();
 			
-			System.out.println(numOfCommit);
-			csvPrinter.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+			for (RevCommit initialCommit : initialCommits) {
+				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
+				if(developer_commit.containsKey(authorId)) {
+					ArrayList<Integer> commits = developer_commit.get(authorId);
+					commits.add(1);
+				}else {
+					ArrayList<Integer> commits = new ArrayList<>();
+					commits.add(1);
+					developer_commit.put(authorId, commits);
+				}
+			}
+			
+			int over10 = 0;
+			for(String authorID : developer_commit.keySet()) {
+				ArrayList<Integer> commits = developer_commit.get(authorID);
+				if(commits.size() >= 100) {
+					over10++;
+				}
+			}
+			
+			if(over10 >= 10) {
+				System.out.println(pojectName);
+				csvPrinter.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+			}
 		}
 		
 		csvPrinter.close();
-
 		
 	}
+	private static String parseAuthorID(String authorId) {
+		Pattern pattern = Pattern.compile(".+\\[(.+|),\\s([^\\s]+)(\\s.+)?,.+\\]");
+		Matcher matcher = pattern.matcher(authorId);
+		if(matcher.find()) {
+			authorId = matcher.group(2);
+		}
+		
+		if(authorId.startsWith("PersonIdent")) {
+			authorId = "Anonymous";
+		}
+		
+		authorId = authorId.replace(" ", "_");
+		return authorId;
+	}
+	
 	private static boolean isValidRepository(String pojectName,String output) {
 		File directory = getGitDirectory(pojectName,output);
 		try {
