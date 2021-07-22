@@ -69,10 +69,12 @@ public class NumberOfCommit {
 			
 			Iterable<RevCommit> initialCommits = git.log().all().call();
 			
-			int numOfCommit = (int) StreamSupport.stream(initialCommits.spliterator(), false).count();
+//			int numOfCommit = (int) StreamSupport.stream(initialCommits.spliterator(), false).count();
 			
+			int count = 0;
 			for (RevCommit initialCommit : initialCommits) {
 				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
+
 				if(developer_commit.containsKey(authorId)) {
 					ArrayList<Integer> commits = developer_commit.get(authorId);
 					commits.add(1);
@@ -81,7 +83,10 @@ public class NumberOfCommit {
 					commits.add(1);
 					developer_commit.put(authorId, commits);
 				}
+				count++;
 			}
+			
+			int numOfCommit = count;
 			
 			int over100 = 0;
 			for(String authorID : developer_commit.keySet()) {
@@ -92,7 +97,6 @@ public class NumberOfCommit {
 			}
 			
 			if(over100 >= 10) {
-				System.out.println(pojectName);
 				csvPrinter.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
 			}
 			
