@@ -39,7 +39,7 @@ public class NumberOfCommit {
 		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
 		
 		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
-		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
+		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
 
 		for (CSVRecord record : records) {
 			String githubAddress = record.get("Github");
@@ -111,6 +111,8 @@ public class NumberOfCommit {
 		
 		csvPrinterOver100.close();
 		csvPrinterLess100.close();
+		writerOver100.close();
+		writerLess100.close();
 		
 	}
 	private static String parseAuthorID(String authorId) {

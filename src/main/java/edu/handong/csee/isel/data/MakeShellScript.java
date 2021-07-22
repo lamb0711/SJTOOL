@@ -27,6 +27,7 @@ public class MakeShellScript {
 			Matcher matcher = pattern1.matcher(record.get(2));
 			while(matcher.find()) {
 				projectName = matcher.group(2);
+				System.out.println(projectName);
 			}
 			
 			System.out.println("/home/yangsujin/git/DAISE/build/distributions/DAISE/bin/DAISE -i /data/AllBICMetric/"+projectName+"-data.arff -o /data/PBDP10 -m 10 -s 0 -b /data/AllBICMetric/BIC_BSZZ_"+projectName+".csv");
