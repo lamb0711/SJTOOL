@@ -6,8 +6,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
@@ -38,8 +42,8 @@ public class NumberOfCommit {
 		BufferedWriter writerOver100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTrain.csv")));
 		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
 		
-		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
-		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit"));
+		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","NumOver100Dev","StartCommit","EndCommit"));
+		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","StartCommit","EndCommit"));
 
 		for (CSVRecord record : records) {
 			String githubAddress = record.get("Github");
@@ -75,9 +79,12 @@ public class NumberOfCommit {
 //			int numOfCommit = (int) StreamSupport.stream(initialCommits.spliterator(), false).count();
 			
 			int count = 0;
+			TreeSet<String> commitTime = new TreeSet<>();
+			
 			for (RevCommit initialCommit : initialCommits) {
 				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
-
+				commitTime.add(getStringDateTimeFromCommitTime(initialCommit.getCommitTime()));
+				
 				if(developer_commit.containsKey(authorId)) {
 					ArrayList<Integer> commits = developer_commit.get(authorId);
 					commits.add(1);
@@ -88,7 +95,6 @@ public class NumberOfCommit {
 				}
 				count++;
 			}
-			
 			int numOfCommit = count;
 			
 			int over100 = 0;
@@ -100,11 +106,10 @@ public class NumberOfCommit {
 			}
 			
 			if(over100 >= 10) {
-				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
 			}else {
-				csvPrinterLess100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit);
+				csvPrinterLess100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,commitTime.first(),commitTime.last());
 			}
-			
 			
 			System.out.println("pojectName : "+pojectName+"	over100 : "+over100);
 		}
@@ -167,6 +172,16 @@ public class NumberOfCommit {
 	private static boolean isCloned(String pojectName,String output) throws InvalidRemoteException, TransportException, GitAPIException {
 		File clonedDirectory = getGitDirectory(pojectName,output);
 		return clonedDirectory.exists();
+	}
+	
+	public static String getStringDateTimeFromCommitTime(int commitTime){
+		SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+		Date commitDate = new Date(commitTime* 1000L);
+
+		TimeZone GMT = TimeZone.getTimeZone("GMT");
+		ft.setTimeZone(GMT);
+
+		return ft.format(commitDate);
 	}
 
 }
