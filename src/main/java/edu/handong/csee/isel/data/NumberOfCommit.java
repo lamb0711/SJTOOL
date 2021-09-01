@@ -98,12 +98,16 @@ public class NumberOfCommit {
 			int numOfCommit = count;
 			
 			int over100 = 0;
+			System.out.println("pojectName : "+pojectName);
 			for(String authorID : developer_commit.keySet()) {
 				ArrayList<Integer> commits = developer_commit.get(authorID);
+				System.out.println("authorID : "+authorID + "	commits : "+commits.size());
 				if(commits.size() >= 100) {
 					over100++;
 				}
 			}
+			
+			System.out.println();
 			
 			if(over100 >= 10) {
 				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
@@ -112,6 +116,8 @@ public class NumberOfCommit {
 			}
 			
 			System.out.println("pojectName : "+pojectName+"	over100 : "+over100);
+			System.out.println("#######################################################");
+			System.out.println();
 		}
 		
 		csvPrinterOver100.close();

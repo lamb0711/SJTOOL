@@ -29,7 +29,7 @@ public class MakeShellScript {
 				projectName = matcher.group(2);
 			}
 			
-			System.out.println("/home/yangsujin/git/DPDP/app/build/distributions/app/bin/app -i /data/AllBICMetric/"+projectName+"-data.arff -o /data/sujinyang/DPDP/3f3 -bow");
+			System.out.println("/home/yangsujin/git/DPDP/app/build/distributions/app/bin/app -test -i /data/AllBICMetric/"+projectName+"-data.arff -o /data/sujinyang/DPDP/test3 -bow -cm /data/sujinyang/DPDP/train3 -dm /data/sujinyang/DPDP/train3/ClusterModel/ibk");
 		}
 		
 //		ArrayList<String> gitLogCall = new ArrayList<>();
