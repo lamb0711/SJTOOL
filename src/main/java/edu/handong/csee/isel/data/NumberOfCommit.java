@@ -99,13 +99,17 @@ public class NumberOfCommit {
 			
 			int over100 = 0;
 			System.out.println("pojectName : "+pojectName);
+			TreeSet<String> NOC_dev = new TreeSet<>();
 			for(String authorID : developer_commit.keySet()) {
 				ArrayList<Integer> commits = developer_commit.get(authorID);
 				System.out.println("authorID : "+authorID + "	commits : "+commits.size());
+				NOC_dev.add(commits.size() + "		"+authorID);
 				if(commits.size() >= 100) {
 					over100++;
 				}
 			}
+			
+			NOC_dev.forEach(e -> System.out.println(e));
 			
 			System.out.println();
 			
