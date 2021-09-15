@@ -48,10 +48,10 @@ public class NumberOfCommit {
 		// save CSV
 		String resultCSVPath = args[2];
 		BufferedWriter writerOver100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTrain.csv")));
-		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
+//		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
 		
 		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","NumOver100Dev","StartCommit","EndCommit"));
-		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","StartCommit","EndCommit"));
+//		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","StartCommit","EndCommit"));
 
 		for (CSVRecord record : records) {
 			String githubAddress = record.get("Github");
@@ -141,11 +141,14 @@ public class NumberOfCommit {
 			
 			System.out.println();
 			
-			if(over100 >= 10) {
-				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
-			}else {
-				csvPrinterLess100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,commitTime.first(),commitTime.last());
-			}
+			csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
+
+			
+//			if(over100 >= 10) {
+//				csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
+//			}else {
+//				csvPrinterLess100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,commitTime.first(),commitTime.last());
+//			}
 			
 			System.out.println("pojectName : "+pojectName+"	over100 : "+over100);
 			System.out.println("#######################################################");
@@ -153,9 +156,9 @@ public class NumberOfCommit {
 		}
 		
 		csvPrinterOver100.close();
-		csvPrinterLess100.close();
+//		csvPrinterLess100.close();
 		writerOver100.close();
-		writerLess100.close();
+//		writerLess100.close();
 		
 	}
 	private static String parseAuthorID(String authorId) {
