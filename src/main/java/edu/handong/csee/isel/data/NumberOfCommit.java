@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -23,7 +24,14 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.diff.DiffAlgorithm;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
+
 
 public class NumberOfCommit {
 	/*
@@ -73,6 +81,7 @@ public class NumberOfCommit {
 			String gitRepositoryPath = gitDirectory.getAbsolutePath();
 			
 			Git git = Git.open(new File(gitRepositoryPath));
+			Repository repo = git.getRepository();;
 			
 			Iterable<RevCommit> initialCommits = git.log().all().call();
 			
@@ -82,6 +91,25 @@ public class NumberOfCommit {
 			TreeSet<String> commitTime = new TreeSet<>();
 			
 			for (RevCommit initialCommit : initialCommits) {
+				
+				if (initialCommit.getParentCount() == 0) continue;
+				RevCommit parent = initialCommit.getParent(0);
+				if (parent == null)
+					continue;
+				
+				List<DiffEntry> diff = diff(parent, initialCommit, repo);
+				
+				int numOfSource = 0;
+				for (DiffEntry entry : diff) {
+					String sourcePath = entry.getNewPath().toString();
+
+					if (sourcePath.indexOf("Test") >= 0 || !sourcePath.endsWith(".java"))
+						continue;
+					numOfSource++;
+				}
+				if(numOfSource == 0)
+					continue;
+
 				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
 				commitTime.add(getStringDateTimeFromCommitTime(initialCommit.getCommitTime()));
 				
@@ -193,5 +221,23 @@ public class NumberOfCommit {
 
 		return ft.format(commitDate);
 	}
+	
+	public static List<DiffEntry> diff(RevCommit parent, RevCommit commit, Repository repo) {
+
+  		DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+ 		df.setRepository(repo);
+ 		df.setDiffAlgorithm(DiffAlgorithm.getAlgorithm(DiffAlgorithm.SupportedAlgorithm.MYERS));
+ 		df.setDiffComparator(RawTextComparator.WS_IGNORE_ALL);
+ 		df.setDetectRenames(true);
+ 		List<DiffEntry> diffs = null;
+ 		try {
+ 			diffs = df.scan(parent.getTree(), commit.getTree());
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+
+  		return diffs;
+ 	}
 
 }
