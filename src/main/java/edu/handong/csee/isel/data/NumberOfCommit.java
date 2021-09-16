@@ -50,7 +50,7 @@ public class NumberOfCommit {
 		BufferedWriter writerOver100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTrain.csv")));
 //		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
 		
-		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","NumOver100Dev","StartCommit","EndCommit"));
+		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","totalDev","NumOver100Dev","NumOver10Dev","StartCommit","EndCommit"));
 //		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","StartCommit","EndCommit"));
 
 		for (CSVRecord record : records) {
@@ -59,6 +59,7 @@ public class NumberOfCommit {
 			String output = args[0];
 			String issueKey = record.get("ISSUE KEY");
 			String Dev = record.get("Dev Days");
+			
 			HashMap<String, ArrayList<Integer>> developer_commit = new HashMap<>();
 			
 			Pattern p = Pattern.compile(".*/(.+)");
@@ -126,11 +127,16 @@ public class NumberOfCommit {
 			int numOfCommit = count;
 			
 			int over100 = 0;
+			int over10 = 0;
 			System.out.println("pojectName : "+pojectName);
 			
 			TreeSet<String> NOC_dev = new TreeSet<>();
 			for(String authorID : developer_commit.keySet()) {
 				ArrayList<Integer> commits = developer_commit.get(authorID);
+				if(commits.size() >= 10) {
+					over10++;
+				}
+				
 				if(commits.size() >= 100) {
 					over100++;
 					NOC_dev.add(commits.size() + "		"+authorID);
@@ -141,7 +147,7 @@ public class NumberOfCommit {
 			
 			System.out.println();
 			
-			csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,over100,commitTime.first(),commitTime.last());
+			csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,developer_commit.size(),over10,over100,commitTime.first(),commitTime.last());
 
 			
 //			if(over100 >= 10) {
