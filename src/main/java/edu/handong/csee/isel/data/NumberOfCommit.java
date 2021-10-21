@@ -109,10 +109,11 @@ public class NumberOfCommit {
 					if (sourcePath.indexOf("Test") >= 0 || !sourcePath.endsWith(".java"))
 						continue;
 					numOfSource++;
+					numOfFiles++;
 				}
-				if(numOfSource == 0)
+				if(numOfSource == 0) {
 					continue;
-				numOfFiles++;
+				}
 				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
 				commitTime.add(getStringDateTimeFromCommitTime(initialCommit.getCommitTime()));
 				
