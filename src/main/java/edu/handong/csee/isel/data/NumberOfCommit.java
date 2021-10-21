@@ -50,7 +50,8 @@ public class NumberOfCommit {
 		BufferedWriter writerOver100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTrain.csv")));
 //		BufferedWriter writerLess100 = new BufferedWriter(new FileWriter( new File(resultCSVPath+File.separator+"ProjectListTest.csv")));
 		
-		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","totalDev","NumOver100Dev","NumOver10Dev","StartCommit","EndCommit"));
+		CSVPrinter csvPrinterOver100 = new CSVPrinter(writerOver100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","Num of File","totalDev","NumOver10Dev","NumOver100Dev","StartCommit","EndCommit"));
+		
 //		CSVPrinter csvPrinterLess100 = new CSVPrinter(writerLess100, CSVFormat.DEFAULT.withHeader("Project name","ISSUE KEY","Github","Dev Days","Num of Commit","StartCommit","EndCommit"));
 
 		for (CSVRecord record : records) {
@@ -89,6 +90,7 @@ public class NumberOfCommit {
 //			int numOfCommit = (int) StreamSupport.stream(initialCommits.spliterator(), false).count();
 			
 			int count = 0;
+			int numOfFiles = 0;
 			TreeSet<String> commitTime = new TreeSet<>();
 			
 			for (RevCommit initialCommit : initialCommits) {
@@ -110,7 +112,7 @@ public class NumberOfCommit {
 				}
 				if(numOfSource == 0)
 					continue;
-
+				numOfFiles++;
 				String authorId = parseAuthorID(initialCommit.getAuthorIdent().toString());
 				commitTime.add(getStringDateTimeFromCommitTime(initialCommit.getCommitTime()));
 				
@@ -147,7 +149,7 @@ public class NumberOfCommit {
 			
 			System.out.println();
 			
-			csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,developer_commit.size(),over10,over100,commitTime.first(),commitTime.last());
+			csvPrinterOver100.printRecord(pojectName,issueKey,githubAddress,Dev,numOfCommit,numOfFiles,developer_commit.size(),over10,over100,commitTime.first(),commitTime.last());
 
 			
 //			if(over100 >= 10) {
