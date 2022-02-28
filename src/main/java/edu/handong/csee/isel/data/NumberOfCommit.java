@@ -105,9 +105,11 @@ public class NumberOfCommit {
 				int numOfSource = 0;
 				for (DiffEntry entry : diff) {
 					String sourcePath = entry.getNewPath().toString();
-
+					
 					if (sourcePath.indexOf("Test") >= 0 || !sourcePath.endsWith(".java"))
 						continue;
+					
+					System.out.println(sourcePath);
 					numOfSource++;
 					numOfFiles++;
 				}
@@ -125,6 +127,7 @@ public class NumberOfCommit {
 					commits.add(1);
 					developer_commit.put(authorId, commits);
 				}
+				
 				count++;
 			}
 			int numOfCommit = count;
@@ -162,6 +165,7 @@ public class NumberOfCommit {
 			System.out.println("pojectName : "+pojectName+"	over100 : "+over100);
 			System.out.println("#######################################################");
 			System.out.println();
+			break;
 		}
 		
 		csvPrinterOver100.close();
